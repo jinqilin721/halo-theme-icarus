@@ -4,12 +4,14 @@
     <#if post.thumbnail?? && post.thumbnail!=''>
         <div class="card-image">
             <#if index>
-                <a href="${context!}/archives/${post.url!}">
-                    <img class="thumbnail" src="${post.thumbnail!}" alt="${post.title!}">
-                </a>
+                <#if post.topPriority?? && post.topPriority gt 0>
+                    <a href="${context!}/archives/${post.url!}">
+                        <img class="thumbnail" style="max-height: 270px !important;" src="${post.thumbnail!}" alt="${post.title!}">
+                    </a>
+                </#if>
             <#else>
                 <span class="image is-7by1">
-                    <img class="thumbnail" src="${post.thumbnail!}" alt="${post.title!}">
+                    <img class="thumbnail" style="max-height: 270px !important;" src="${post.thumbnail!}" alt="${post.title!}">
                 </span>
             </#if>
         </div>
@@ -36,14 +38,20 @@
                     </#if>
                 </#if>
             </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <span class="level-item has-text-grey">评论(${post.commentCount!'0'})</span>
+                    <span class="level-item has-text-grey">浏览(${post.visits!'0'})</span>
+                </div>
+            </div>
         </div>
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+        <h2 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             <#if index>
                 <a class="has-link-black-ter" href="${context!}/archives/${post.url!}">${post.title!}</a>
             <#else>
                 ${post.title!}
             </#if>
-        </h1>
+        </h2>
         <div class="content">
             <#if index && post.summary?? && post.summary!=''>
                 ${post.summary!}
@@ -51,27 +59,55 @@
                 ${post.formatContent!}
             </#if>
         </div>
-        <#if !index && tags?? && (tags?size gt 0)>
-            <div class="level is-size-7 is-uppercase">
+        <#if index>
+            <div class="level is-size-7 is-uppercase is-mobile">
                 <div class="level-start">
+                    <#if post.tags?? && (post.tags?size gt 0)>
+                        <div class="level-item">
+                            <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                            <#list post.tags as tag>
+                                <a class="has-link-grey -link" style="margin-left: 10px;" href="${context!}/tags/${tag.slugName!}">${tag.name!}</a>&nbsp;
+                            </#list>
+                        </div>
+                    </#if>
+                </div>
+                <#if post.summary?? && post.summary!=''>
+                    <div class="level-end">
+                        <div class="level-item">
+                            <a class="button is-size-7 is-light" href="${context!}/archives/${post.url!}#more">阅读更多</a>
+                        </div>
+                    </div>
+                </#if>
+            </div>
+        </#if>
+        <#if !index>
+            <div class="level is-size-7 is-uppercase is-mobile">
+                <div class="level-start">
+                    <#if tags?? && (tags?size gt 0)>
+                        <div class="level-item">
+                            <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                            <#list tags as tag>
+                                <a class="has-link-grey -link" style="margin-left: 10px;" href="${context!}/tags/${tag.slugName!}">${tag.name!}</a>&nbsp;
+                            </#list>
+                        </div>
+                    </#if>
+                </div>
+                <div class="level-end">
                     <div class="level-item">
-                        <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                        <#list tags as tag>
-                            <a class="has-link-grey -link" href="${context!}/tags/${tag.slugName!}">${tag.name!}</a>&nbsp;
-                        </#list>
+                        <span class="has-text-grey">最后编辑时间：${post.editTime!?string('yyyy-MM-dd HH:mm:ss')}</span>
                     </div>
                 </div>
             </div>
         </#if>
-        <#if index && post.summary?? && post.summary!=''>
+        <#--<#if index && post.summary?? && post.summary!=''>
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="${context!}/archives/${post.url!}#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="${context!}/archives/${post.url!}#more">阅读更多|${post.topPriority}|${post.visits}|${post.likes}|${post.editTime}</a>
                 </div>
             </div>
         </div>
-        </#if>
+        </#if>-->
         <#if !index && settings.share_type?? && settings.share_type!=''>
             <#include "../share/${settings.share_type}.ftl">
         </#if>
